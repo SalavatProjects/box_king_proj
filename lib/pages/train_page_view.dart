@@ -125,7 +125,10 @@ class _TrainPageViewState extends State<TrainPageView> {
                     );
                   },
                 ),
-                CarouselSlider(items: AppConstants.trainTypes.map(
+                BlocSelector<TrainCubit, TrainState, String>(
+                selector: (state) => state.name,
+                builder: (context, name) {
+                  return CarouselSlider(items: AppConstants.trainTypes.map(
                     (elem) => Builder(builder: (BuildContext context) {
                       return Padding(
                         padding: EdgeInsets.symmetric(horizontal: 12.w),
@@ -145,7 +148,7 @@ class _TrainPageViewState extends State<TrainPageView> {
                               child: Column(
                                 children: [
                                   ...List.generate(
-                                    AppConstants.trainTypesContent[elem]!.length,
+                                    AppConstants.trainsContent[name]![elem]!.length,
                                     (int index) => Row(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
@@ -156,7 +159,7 @@ class _TrainPageViewState extends State<TrainPageView> {
                                         Expanded(
                                             child: Padding(
                                               padding: EdgeInsets.only(bottom: 24.w),
-                                              child: Text(AppConstants.trainTypesContent[elem]![index],
+                                              child: Text(AppConstants.trainsContent[name]![elem]![index],
                                                 style: AppStyles.gilroyMediumWhite(14.sp),),
                                             ),
                                         )
@@ -176,7 +179,9 @@ class _TrainPageViewState extends State<TrainPageView> {
                     })).toList(), options: CarouselOptions(
                   height: 470.h,
                   viewportFraction: 0.9,
-                ))
+                ));
+  },
+)
               ],
             ),
           ),
@@ -253,7 +258,8 @@ class _TrainPageViewState extends State<TrainPageView> {
                         shape: BoxShape.circle,
                         color: AppColors.lightBlack2,
                       ),
-                      child: Align(
+                      child: _isRunning ? Icon(Icons.pause, size: 46.w, color: AppColors.lightGrey,) :
+                      Align(
                         alignment: Alignment(0.1, 0),
                         child: SvgPicture.asset('assets/icons/play.svg'),
                       ),
